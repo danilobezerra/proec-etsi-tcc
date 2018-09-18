@@ -1,0 +1,246 @@
+\documentclass[10pt, conference, compsocconf]{IEEEtran}
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+
+\usepackage{biblatex}
+\addbibresource{references.bib}
+
+\usepackage{amsmath}
+
+\usepackage{graphicx}
+\graphicspath{{images/}}
+
+\begin{document}
+
+\title{Design de Jogos Eletrônicos de Quebra-Cabeças usando Geração Procedural}
+\author{
+\IEEEauthorblockN{Danilo dos Santos Bezerra\IEEEauthorrefmark{1}, Francisco Isidro Massetto\IEEEauthorrefmark{2}}
+\IEEEauthorblockA{Pró-Reitoria de Extensão e Cultura\\Universidade Federal do ABC\\Santo André, Brasil\\
+\IEEEauthorrefmark{1}Email: danilo.bezerra@ufabc.edu.br\\\IEEEauthorrefmark{2}Email: francisco.massetto@ufabc.edu.br}
+}
+
+\maketitle
+
+\begin{abstract}
+
+Jogos de quebra-cabeças costumam ser bastante divertidos, tal gênero é comum em dispositivos móveis que é a plataforma que detêm mais da metade do mercado de jogos eletrônicos. A geração procedural é um artifício interessante para construção de jogos eletrônicos pois possibilita a criação de grande quantidade de conteúdo com poucos recursos. À vista disso, a utilização de geração procedural pode tornar o desenvolvimento de jogos eletrônicos do gênero quebra-cabeça mais rápido e fácil. Esse trabalho contém a descrição de um protótipo que usa geração procedural e termina com uma reflexão sobre possíveis melhorias para potencializar seus benefícios.
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+
+Design de Jogos, Quebra-Cabeça, Geração Procedural
+
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+\section{Introdução}
+
+Atualmente, de acordo com a pesquisa \parencite{mobilerevenues}, o mercado de jogos eletrônicos para dispositivos móveis cresce 25,5\% ao ano atingindo a marca de 70,3 bilhões de dólares, dessa forma, sendo metade da receita total dos jogos eletrônicos incluindo as plataformas PCs e consoles. Novak \parencite{novak2010gamedev} observa que plataformas portáteis como smartphones e tablets são ideais para jogos do gênero quebra-cabeça, que se enquadram na categoria de jogos casuais.
+
+O crescimento deste mercado e a exigência por qualidade têm exaurido cada vez mais a linha de produção, porém nem sempre as equipes são compostas de membros suficientes para suprir todas as áreas necessárias na criação de um projeto de jogo, que muitas vezes são desenvolvidos por poucas ou apenas uma pessoa.
+
+Sendo assim, se faz cada vez mais necessário utilizar de técnicas e artifícios para otimizar o processo de produção dos jogos, prescindindo-se da criação de conteúdo manualmente e optando-se por um procedimento que gere conteúdo automaticamente, segundo a filosofia da modelagem procedural \parencite{smelik2009survey}.
+
+Este trabalho visa criar o protótipo de um jogo eletrônico do gênero quebra-cabeça baseado em jogos como \textit{Puzzle Ball}, descrito na seção \ref{sec:development}, que contenha um sistema de geração automática a fim de economizar recursos e mantendo o engajamento dos jogadores. Para tal intuito, a solução proposta será construída a partir de uma taxonomia que será abordada na seção \ref{sec:literature-review}.
+
+\section{Revisão da bibliografia}
+\label{sec:literature-review}
+
+\subsection{Jogos eletrônicos do gênero quebra-cabeça}
+
+O gênero de jogos eletrônicos quebra-cabeça, também conhecido como \textit{puzzle}, é um gênero já consolidado e bastante aceito no mercado de jogos. Rabin \parencite{rabin2011intro1} reflete que na indústria há um longo debate sobre os quebra-cabeças serem jogos ou não, para o autor eles certamente são o suficiente para justificar um gênero baseado neles.
+
+\begin{quote}
+    Os \textit{Puzzles} se constituem um tipo de enigma ou problema cuja finalidade está em desenvolver o raciocínio, lógico e matemático, em seus níveis ontológicos, cognitivos, como força motriz para as mais diversas formas de produção de conhecimentos, como citamos os puzzles podem estar presentes em games com diferentes temas e objetivos, seja na matemática ou qualquer outra ciência. \parencite{toneis2016puzzles}.
+\end{quote}
+
+Jogos desse gênero consistem em solucionar quebra-cabeças ou enigmas, Novak \parencite{novak2010gamedev} afirma que nos jogos de quebra-cabeça a narrativa é mínima ou inexistente e que eles geralmente funcionam de maneira temporizada, baseada em turnos ou em tempo real. Entre os jogos mais conhecidos do gênero podemos citar o famoso \textit{Tetris} (1984), na figura \ref{fig:game-tetris}, que tem como finalidade empilhar tetraminós na tela.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=4cm]{game-tetris}
+    \caption{Versão do jogo \textit{Tetris} para IBM PC no ano 1986.}
+    \label{fig:game-tetris}
+\end{figure}
+
+O gênero é conhecido por ter mecânicas geralmente bem simples e que prendem o jogador pelos desafios envolvidos na sua resolução, para Rabin \parencite{rabin2011intro1} os jogos de quebra-cabeça são um desafio para o game designer pois neste caso é importante oferecer desafios e controle ao jogador. Um puzzle que não exiba nenhum tipo de feedback de seu progresso pode ser desencorajador ao jogador e uma possível solução para isso, por exemplo, seria através de tentativa e erro revelar a solução ao jogador.
+
+\subsection{Geração Procedural de Conteúdo}
+
+A Geração Procedural de Conteúdo (GPC) é a criação de conteúdo para jogos a partir de poucos parâmetros que permitem um grande e imprevisível número de possibilidades, usando um processo aleatório ou pseudoaleatório. Togelius et al. \parencite{togelius2011pcgames} tenta definir GPC como: “a criação algorítmica do conteúdo do jogo com entrada de usuário limitada ou indireta”, ou seja, baseia-se na criação de conteúdo automaticamente usando algoritmos com os dados recebidos. Alguns exemplos dos conteúdos que podem ser gerados nos jogos são mundos, cenários, adereços dos cenários, armas, nomes, narrativas entre outras coisas.
+
+No início dos anos 80 os computadores tinham uma memória de armazenamento bastante limitada, dessa forma a quantidade de conteúdo era restrita. Para superar essa limitação na época uma das estratégias adotadas foi usar o espaço disponível para guardar uma série de padrões, gerando o conteúdo durante a execução do jogo ao invés de armazenar, possibilitando assim exceder o limite de espaço disponível. Essa foi a estratégia usada pelo jogo \textit{Elite} (1984) para criar oito galáxias, cada uma contendo 256 planetas com características próprias.
+
+Outro jogo dessa mesma época que também sofria limitações era o jogo de aventura \textit{Rogue} (1980), sua solução foi gerar aleatoriamente salas interligadas por túneis ao início de cada partida. Devido sua grande popularidade vários jogos o imitaram e basearam-se em seus elementos, criando assim um subgênero de jogos bem conhecido na atualidade chamado \textit{roguelike}.
+
+Alguns anos à frente combinando o gênero plataforma com o subgênero \textit{roguelike}, ao invés de contornar limitações como nos exemplos anteriores, o jogo \textit{Spelunky} (2008) na figura \ref{fig:spelunky-pc-screen}, usa a GPC para oferecer ao jogador um conjunto de 16 níveis divertidos e atrativos, que são completamente diferentes a cada partida \parencite{yu2016spelunky}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=4cm]{spelunky-pc-screen}
+    \caption{A versão original \textit{freeware} do jogo \textit{Spelunky}.}
+    \label{fig:spelunky-pc-screen}
+\end{figure}
+
+Conforme discutido anteriormente a GPC constitui-se de diversas formas e pode ser utilizada para resolver diversos problemas, por essa razão, Togelius et al. \parencite{togelius2011taxonomy} estabelece uma taxonomia para classificar as diferentes abordagens da GPC nas suas distinções mais comuns, a seguir.
+
+\subsubsection{Online ou offline}
+
+Diz respeito ao conteúdo ser gerado durante a execução do jogo ou durante seu desenvolvimento através de uma ferramenta. 
+
+\subsubsection{Conteúdo necessário ou opicional}
+
+O conteúdo gerado afeta diretamente a progressão do jogador ou serve apenas de suporte para as mecânicas presentes no jogo.
+
+\subsubsection{Seeds aleatórios ou vetores de parâmetros}
+
+Refere-se ao grau de controle, se o conteúdo será gerado aleatoriamente por um \textit{seed} apenas ou a partir de parâmetros pré-definidos que irão definir suas possíveis propriedades.
+
+\subsubsection{Geração estocástica ou determinística}
+
+Dado um determinado valor de entrada, será gerado um conteúdo a cada vez que o algoritmo for executado ou o resultado sempre será o mesmo.
+
+\subsubsection{Construtivo ou gerar-e-testar}
+
+O algoritmo será encarregado construir o conteúdo enquanto ao mesmo tempo realiza as validações necessárias ou se terá um mecanismo responsável por testar a validade do conteúdo gerado após sua construção.
+
+\section{Desenvolvimento}
+\label{sec:development}
+
+O protótipo a ser descrito nesse trabalho utilizará as seguintes abordagens, de acordo com a taxonomia citada anteriormente: \textit{online}, \textit{conteúdo necessário}, \textit{vetores de parâmetros}, \textit{determinística} e \textit{construtiva}. Ou seja, o conteúdo será gerado durante execução, afetará diretamente a progressão do jogador, será construído a partir de parâmetros pré-definidos, dados os mesmos valores o conteúdo sempre será o mesmo e será validado durante a sua própria construção.
+
+Trata-se de um jogo eletrônico do gênero quebra-cabeça, cuja a condição de vitória consiste em conectar os blocos de origem e destino, que serão identificados neste protótipo pelas cores verde e vermelho respectivamente. Esses blocos são fixos no tabuleiro, enquanto os blocos brancos de conexão podem somente ser movimentados em direção aos espaços vazios identificados pela cor preta. A figura \ref{fig:block-features} ilustra como serão representadas as características dos blocos que estão distribuídos pelo tabuleiro do jogo.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{block-features}
+    \caption{Representações das características dos blocos. Da esquerda para a direita: espaço vazio, conexões para cima, baixo, esquerda e direita, destino e origem. É importante observar que os blocos de conexão serão sobrepostos para formar mais de uma saída.}
+    \label{fig:block-features}
+\end{figure}
+
+Os blocos de conexão precisam conectar-se estritamente com outros dois blocos de conexão, origem ou destino localizados em suas adjacências e que tenham características complementares a suas próprias, por exemplo, um bloco de conexão que tenha saídas para cima e esquerda pode se conectar com outro imediatamente acima que tenha saída para baixo e outro imediatamente a sua esquerda com saída para direita, conforme ilustrado na figura \ref{fig:example-connection}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=2cm]{example-connection}
+    \caption{Sob o canto inferior direito, o bloco tem saídas para cima e esquerda, conectando-se com os blocos adjacentes posicionados imediatamente acima e a sua esquerda.}
+    \label{fig:example-connection}
+\end{figure}
+
+Um designer de jogos poderia facilmente construir cada fase de um jogo dessa espécie em qualquer motor de jogo da atualidade, modelando e definindo as características de cada bloco manualmente, porém isso rapidamente poderia se tornar um trabalho oneroso em função da quantidade de fases com qualidade e unicidade que serão disponibilizadas no jogo. Uma possível solução para esse problema é delegar as tarefas de construção do tabuleiro e definição dos blocos para um algoritmo, que será responsável por construir as fases a partir de valores atribuídos previamente pelo designer.
+
+A fim de cumprir esse objetivo, o tabuleiro será gerado proceduralmente a partir de uma matriz quadrada $M_{4 \times 4}$, composta de números inteiros. Cada elemento da matriz corresponde aos valores que irão definir as características de cada bloco que será instanciado no tabuleiro. Valores de números inteiros por si só não são suficientes para armazenar as informações necessárias, então para contornar essa limitação, será utilizada uma enumeração com potências de dois para representar as características de um bloco de acordo com a tabela \ref{tab:flagvalues}, realizando operações simples de lógica binária com os bits armazenados nos seus valores.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Características & Valor & Bits\\
+    \hline
+    \hline
+    None & 0 & 000000\\
+    \hline
+    Top & 1 & 000001\\
+    \hline
+    Bottom & 2 & 000010\\
+    \hline
+    Right & 4 & 000100\\
+    \hline
+    Left & 8 & 001000\\
+    \hline
+    Target & 16 & 010000\\
+    \hline
+    Source & 32 & 100000\\
+    \hline
+    \end{tabular}
+    \caption{Enumeração das características com seus valores em potências de dois e suas respectivas representações em bits}
+    \label{tab:flagvalues}
+\end{table}
+
+\subsection{Deslocamento bit a bit}
+
+A razão para a utilização de potências de dois como valores da enumeração é por causa das suas representações binárias, os números inteiros 2, 4 e 8 por exemplo, equivalem respectivamente a 10, 100 e 1000 quando representados em bits, ou seja, a enumeração consiste em sucessivos deslocamentos de bits para a esquerda sobre o número inteiro 1.
+
+\subsection{Disjunção binária}
+
+Então para efetivamente atribuir mais de uma característica para um bloco é preciso realizar uma operação lógica de disjunção, ou OU, sobre os valores inteiros da enumeração  mostrada na tabela \ref{tab:flagvalues}, por exemplo, a operação $2 \lor 4 = 6$ combina as características \textit{Bottom} e \textit{Right}, representadas em bits como 110. Os elementos da matriz $M_{4 \times 4}$ correspondem ao resultado de disjunções sobre os valores da enumeração, ou seja, das características do bloco.
+
+\subsection{Conjunção binária}
+
+O algoritmo gerador precisa de uma condição para identificar quais características devem ser modeladas no momento da criação do bloco, sendo necessário realizar a operação inversa da qual foi usada para atribuir os elementos da matriz $M_{4 \times 4}$. Será necessário uma operação lógica de conjunção, ou E, para extrair as características atribuídas, por exemplo, para identificar se o valor 6 contém a característica \textit{Bottom} verificamos que a condição $6 \land 2 \neq 0$ é verdadeira.
+
+\section{Teste e Validação}
+\label{sec:testing-and-validation}
+
+O protótipo utilizado como referência neste trabalho foi desenvolvido com o motor de jogos \textit{Unity}, por ser uma ferramenta acessível e bastante indicada para rápida prototipagem, mas pode ser desenvolvido em qualquer outro motor ou biblioteca que tenha suporte a jogos 2D e leitura de arquivos. A matriz de números inteiros será armazenada em um arquivo texto que será lido a partir de uma requisição web, dessa forma, os arquivos poderão ser hospedados no local em que for mais conveniente. Para maior praticidade, os arquivos textos utilizados no protótipo serão hospedados localmente. A seguir, os elementos de uma possível matriz pertencente a um dos arquivos texto:
+
+\[
+    M_{4 \times 4} =
+\begin{bmatrix}
+    3 & 6 & 10 & 12 \\
+    3 & 5 & 5 & 24 \\
+    36 & 10 & 9 & 3 \\
+    12 & 5 & 0 & 3
+\end{bmatrix}
+\]
+
+Os elementos da matriz $M_{4 \times 4}$ são os valores de números inteiros que serão convertidos em características para os blocos presentes no tabuleiro gerado, de acordo com a tabela \ref{tab:level05-flagvalues}, o algoritmo usará as respectivas representações em bits desses valores.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Características & Valor & Bits\\
+    \hline
+    \hline
+    None & 0 & 000000\\
+    \hline
+    Top, Bottom & 3 & 000011\\
+    \hline
+    Top, Right & 5 & 000101\\
+    \hline
+    Bottom, Right & 6 & 000110\\
+    \hline
+    Top, Left & 9 & 001001\\
+    \hline
+    Bottom, Left & 10 & 001010\\
+    \hline
+    Right, Left & 12 & 001100\\
+    \hline
+    Left, Target & 24 & 011000\\
+    \hline
+    Right, Source & 36 & 100100\\
+    \hline
+    \end{tabular}
+    \caption{Características e representações em bits correspondentes aos valores da matriz exemplo}
+    \label{tab:level05-flagvalues}
+\end{table}
+
+Após a leitura e identificação dos valores, resta apenas gerar proceduralmente o tabuleiro a partir das informações obtidas. Finalmente, a figura \ref{fig:level05-screenshot} mostra o resultado do processamento da matriz $M_{4 \times 4}$, após todos os blocos serem devidamente instanciados.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=4cm]{level05-screenshot}
+    \caption{Tabuleiro gerado proceduralmente a partir da matriz de números inteiros que está armazenada em um arquivo texto.}
+    \label{fig:level05-screenshot}
+\end{figure}
+
+\section{Considerações Finais}
+
+A construção do protótipo se manteve alinhada ao escopo definido inicialmente, deste modo, foi possível alcançar o resultado desejado ao desenvolver um protótipo de jogo do gênero quebra-cabeça usando geração procedural com o intuito de economizar tempo e recursos.
+
+Apesar de atingir o resultado esperado com o protótipo, alguns pontos não puderam ser aprofundados nesse trabalho, por exemplo, ainda é necessária intervenção humana na criação das fases, porque atualmente o designer precisa atribuir manualmente os elementos da matriz $M_{4 \times 4}$ que servirá como entrada para o algoritmo. Duas possíveis recomendações para levar esse protótipo além são: desenvolver uma ferramenta que torne próximo de trivial a construção das matrizes ou desenvolver um mecanismo para gerar as matrizes automaticamente e de forma aleatória.
+
+Considerando o que foi feito até o momento pode-se dizer que apesar da dificuldade, desenvolver sistemas de geração procedural tem um ótimo custo-benefício e pode ser um ótimo investimento que a médio e longo prazo renderá em bastante conteúdo para o jogo. 
+
+\section*{Agradecimentos}
+
+À minha esposa e companheira pela grande ajuda e incentivo para a realização deste trabalho, mesmo nos momentos em que tive vontade de desistir. À universidade pela oportunidade. Ao meu orientador por me despertar o interesse em pesquisar o tema.
+
+\printbibliography
+
+\end{document}
