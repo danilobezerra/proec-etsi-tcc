@@ -1,0 +1,13 @@
+{
+"companyName": "DefaultCompany",
+"productName": "TCC TSI-4 Project",
+"dataUrl": "tcc-tsi4-webgl.data.unityweb",
+"wasmCodeUrl": "tcc-tsi4-webgl.wasm.code.unityweb",
+"wasmFrameworkUrl": "tcc-tsi4-webgl.wasm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#404040",
+"cacheControl": {"default": "must-revalidate"}
+}
